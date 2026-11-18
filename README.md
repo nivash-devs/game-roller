@@ -1,7 +1,7 @@
 # Game Roller
 
-A black and white page that rolls through game ideas and lands on a platformer.
+A black and white page that reads "a _______ game". Press space and the blank rolls through game types and lands on puzzle.
 
-Click or press space to roll again.
+Space rolls, R resets, M mutes.
 
 Made for a build-in-public reel: roll, land, then build the game with AI.
