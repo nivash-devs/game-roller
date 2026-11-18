@@ -35,7 +35,7 @@ h1 em { font-style: normal; background: var(--mark); color: var(--mark-ink); bor
 <div id="stage">
   <h1>What game do I build today?</h1>
   <div id="win" aria-live="polite"><div id="mark"></div><div id="reel"></div></div>
-  <div id="hint">CLICK OR PRESS SPACE TO ROLL AGAIN</div>
+  <div id="hint">CLICK OR PRESS SPACE TO ROLL AGAIN. M MUTES</div>
 </div>
 
 <script>
@@ -53,6 +53,25 @@ h1 em { font-style: normal; background: var(--mark); color: var(--mark-ink); bor
       return ((ay * u + by) * u + cy) * u; };
   })(0.165, 0.84, 0.44, 1);
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Sound: made live with the Web Audio API, so there are no files to load. Browsers keep it silent until the page has been clicked or a key pressed.
+  var AC = window.AudioContext || window.webkitAudioContext, ac = null, muted = false;
+  function audio() {
+    if (!AC) return null;
+    if (!ac) { try { ac = new AC(); } catch (e) { return null; } }
+    if (ac.state === "suspended") { try { ac.resume().catch(function () {}); } catch (e) {} }
+    return ac;
+  }
+  function live() { var a = audio(); return a && a.state === "running" && !muted ? a : null; }
+  function blip(a, type, f0, f1, vol, dur, at, cut) {      // one short tone with a fast fade
+    var t = a.currentTime + (at || 0), o = a.createOscillator(), g = a.createGain(), lp = a.createBiquadFilter();
+    o.type = type; o.frequency.setValueAtTime(f0, t); if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    lp.type = "lowpass"; lp.frequency.value = cut || 4000;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(lp); lp.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
+  }
+  function playTick() { var a = live(); if (a) blip(a, "triangle", 1500 + Math.random() * 250, 1100, 0.09, 0.03, 0, 3200); }
+  function playLand() { var a = live(); if (!a) return; blip(a, "sine", 150, 52, 0.55, 0.24, 0, 800); blip(a, "sine", 988, 988, 0.07, 0.55, 0.04, 6000); blip(a, "triangle", 1976, 1976, 0.025, 0.4, 0.04, 6000); }
 
   var reel = $("reel"), rows = [];
   for (var l = 0; l < LOOPS; l++) ITEMS.forEach(function (t) { var r = document.createElement("div"); r.className = "row"; r.textContent = t; reel.appendChild(r); rows.push(r); });
@@ -76,13 +95,29 @@ h1 em { font-style: normal; background: var(--mark); color: var(--mark-ink); bor
     last = target; startAt = performance.now();
     $("hint").style.opacity = 0;
     if (reduce) { paint(to, true); $("mark").style.transform = "scaleX(1)"; return; }
+    var prevPos = from, prevT = 0, lastF = Math.floor(from), lastTickAt = -1, landFx = false, win = $("win");
+    reel.style.filter = "none";
     (function tick(now) {
-      var t = (now - startAt) / 1000, p = ease(clamp(t / DUR));
-      paint(from + (to - from) * p, false);
+      var t = (now - startAt) / 1000, p = ease(clamp(t / DUR)), pos = from + (to - from) * p;
+      paint(pos, false);
+      var speed = t > prevT ? Math.abs(pos - prevPos) / (t - prevT) : 0;           // rows per second
+      prevPos = pos; prevT = t;
+      // a tick each time a game passes the middle (never faster than about 35 a second)
+      var f = Math.floor(pos); if (f !== lastF) { lastF = f; if (t - lastTickAt > 0.028) { lastTickAt = t; playTick(); } }
+      // motion blur while it is fast
+      if (!reduce) reel.style.filter = speed > 18 ? "blur(" + Math.min(2.5, speed / 45).toFixed(2) + "px)" : "none";
       // the marker sweeps in as the reel settles
       var m = ease(clamp((t - (DUR - 0.5)) / 0.55)); $("mark").style.transform = "scaleX(" + m + ")";
       if (m > 0.5) rows[landed].style.color = "var(--mark-ink)";
-      if (t < DUR + 0.6) raf = requestAnimationFrame(tick); else { paint(to, true); setTimeout(function () { $("hint").style.opacity = 1; }, 1200); }
+      // landing: a thump and a chime, a short shake, and the winner pops
+      if (!landFx && t >= DUR - 0.02) { landFx = true; playLand(); }
+      if (!reduce && t >= DUR - 0.02) {
+        var u = clamp((t - (DUR - 0.02)) / 0.22), k = (1 - u) * (1 - u);
+        win.style.transform = "translate(" + (Math.sin(u * 60) * 7 * k).toFixed(2) + "px," + (Math.cos(u * 47) * 4 * k).toFixed(2) + "px)";
+        rows[landed].style.transform = "scale(" + (1 + 0.05 * k).toFixed(3) + ")";
+      }
+      if (t < DUR + 0.6) raf = requestAnimationFrame(tick);
+      else { paint(to, true); reel.style.filter = "none"; win.style.transform = "none"; rows[landed].style.transform = "none"; setTimeout(function () { $("hint").style.opacity = 1; }, 1200); }
     })(performance.now());
   }
   function again() { roll(FIRST); }
@@ -98,9 +133,10 @@ h1 em { font-style: normal; background: var(--mark); color: var(--mark-ink); bor
     paint(Math.floor(Math.random() * ITEMS.length), false);
     setTimeout(function () { roll(FIRST); }, 700);
   }
-  $("stage").addEventListener("click", again);
-  document.addEventListener("keydown", function (e) { if (e.code === "Space" || e.key === "Enter" || e.key === "r" || e.key === "R") { e.preventDefault(); again(); } });
+  $("stage").addEventListener("click", function () { audio(); again(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "m" || e.key === "M") { muted = !muted; $("hint").textContent = muted ? "SOUND OFF. PRESS M FOR SOUND" : "CLICK OR PRESS SPACE TO ROLL AGAIN. M MUTES"; $("hint").style.opacity = 1; return; } audio(); if (e.code === "Space" || e.key === "Enter" || e.key === "r" || e.key === "R") { e.preventDefault(); again(); } });
   window.addEventListener("resize", function () { if (landed >= 0 && performance.now() - startAt > DUR * 1000) paint(to, true); });
+  audio();
   intro();
 })();
 </script>
