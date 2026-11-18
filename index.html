@@ -105,19 +105,14 @@ h1 em { font-style: normal; background: var(--mark); color: var(--mark-ink); bor
       // a tick each time a game passes the middle (never faster than about 35 a second)
       var f = Math.floor(pos); if (f !== lastF) { lastF = f; if (t - lastTickAt > 0.028) { lastTickAt = t; playTick(); } }
       // motion blur while it is fast
-      if (!reduce) reel.style.filter = speed > 18 ? "blur(" + Math.min(2.5, speed / 45).toFixed(2) + "px)" : "none";
+      if (!reduce) reel.style.filter = speed > 4 ? "blur(" + Math.min(2.5, speed / 45).toFixed(2) + "px)" : "none";
       // the marker sweeps in as the reel settles
       var m = ease(clamp((t - (DUR - 0.5)) / 0.55)); $("mark").style.transform = "scaleX(" + m + ")";
-      if (m > 0.5) rows[landed].style.color = "var(--mark-ink)";
-      // landing: a thump and a chime, a short shake, and the winner pops
+      var cm = clamp((m - 0.25) / 0.5), v = Math.round(255 * (1 - cm)); if (cm > 0) rows[landed].style.color = "rgb(" + v + "," + v + "," + v + ")";
+      // landing: a thump and a chime
       if (!landFx && t >= DUR - 0.02) { landFx = true; playLand(); }
-      if (!reduce && t >= DUR - 0.02) {
-        var u = clamp((t - (DUR - 0.02)) / 0.22), k = (1 - u) * (1 - u);
-        win.style.transform = "translate(" + (Math.sin(u * 60) * 7 * k).toFixed(2) + "px," + (Math.cos(u * 47) * 4 * k).toFixed(2) + "px)";
-        rows[landed].style.transform = "scale(" + (1 + 0.05 * k).toFixed(3) + ")";
-      }
       if (t < DUR + 0.6) raf = requestAnimationFrame(tick);
-      else { paint(to, true); reel.style.filter = "none"; win.style.transform = "none"; rows[landed].style.transform = "none"; setTimeout(function () { $("hint").style.opacity = 1; }, 1200); }
+      else { paint(to, true); reel.style.filter = "none"; setTimeout(function () { $("hint").style.opacity = 1; }, 1200); }
     })(performance.now());
   }
   function again() { roll(FIRST); }
