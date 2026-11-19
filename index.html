@@ -24,11 +24,11 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f
 #stage { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(16px, 3.5vh, 44px); text-align: center; }
 h1 { margin: 0; font-weight: 700; font-size: clamp(30px, min(6vw, 9vh), 92px); line-height: 1.02; letter-spacing: -0.035em; text-wrap: balance; max-width: 15em; opacity: 0; transform: translateY(24px); }
 #line { --row: 1.3em; display: flex; align-items: center; justify-content: center; gap: 0.28em; font-size: var(--big); font-weight: 700; letter-spacing: -0.035em; line-height: 1; white-space: nowrap; opacity: 0; }
-#win { position: relative; width: 5.2em; height: calc(var(--row) * 3); overflow: hidden; }
+#win { position: relative; width: 6.4em; height: calc(var(--row) * 3); overflow: hidden; }
 #mark { position: absolute; left: 0; right: 0; top: var(--row); height: var(--row); background: var(--mark); transform: scaleX(0); transform-origin: left center; }
 #blank, #reel { transition: opacity 0.14s; }
 #blank { position: absolute; left: 0; right: 0; top: var(--row); height: var(--row); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 0.3em; }
-#blank i { display: block; width: 3.9em; height: 0.095em; background: var(--ink); }
+#blank i { display: block; width: 4.8em; height: 0.095em; background: var(--ink); }
 #reel { position: absolute; left: 0; right: 0; top: 0; opacity: 0; will-change: transform; }
 .row { height: var(--row); display: flex; align-items: center; justify-content: center; }
 #hint { font: 500 clamp(12px, 1.5vw, 19px)/1 var(--f-mono); color: var(--muted); letter-spacing: 0.06em; transition: opacity 0.4s; min-height: 1em; }
@@ -53,13 +53,13 @@ h1 { margin: 0; font-weight: 700; font-size: clamp(30px, min(6vw, 9vh), 92px); l
     "Anki", "Quizlet", "Kahoot", "Scratch", "Replit", "Cursor", "CapCut", "InShot", "Edits",
     "Premiere", "Calendly", "Zapier", "Miro", "Linear", "Keynote", "VLC", "Plex", "Audible",
     "Kindle", "Strava", "Fitbit", "Waze", "Lyft", "Zillow", "Etsy", "eBay", "Amazon",
-    "Shopify", "Stripe", "Docker", "Unreal", "Lichess", "Wordle", "Wii"
+    "Shopify", "Stripe", "Docker", "Unreal", "Lichess", "Wordle", "Rubik's Cube"
   ];
-  // Shuffle the order each time the page loads, but keep "Wii" away from the very start and end of the list.
+  // Shuffle the order each time the page loads, but keep "Rubik's Cube" away from the very start and end of the list.
   var ITEMS = BASE.slice();
   for (var i = ITEMS.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), tmp = ITEMS[i]; ITEMS[i] = ITEMS[j]; ITEMS[j] = tmp; }
-  (function () { var w = ITEMS.indexOf("Wii"), mid = Math.floor(ITEMS.length / 2); if (w < 3 || w > ITEMS.length - 4) { ITEMS[w] = ITEMS[mid]; ITEMS[mid] = "Wii"; } })();
-  var TARGET = ITEMS.indexOf("Wii");          // every roll lands on "Wii"
+  (function () { var w = ITEMS.indexOf("Rubik's Cube"), mid = Math.floor(ITEMS.length / 2); if (w < 3 || w > ITEMS.length - 4) { ITEMS[w] = ITEMS[mid]; ITEMS[mid] = "Rubik's Cube"; } })();
+  var TARGET = ITEMS.indexOf("Rubik's Cube");          // every roll lands on "Rubik's Cube"
   var LOOPS = 4, DUR = 3.8;                    // reel length, and how long a roll takes (seconds)
   var REST = "PRESS SPACE TO ROLL", DONE = "SPACE ROLLS AGAIN. R RESETS. M MUTES";
   var $ = function (id) { return document.getElementById(id); };
