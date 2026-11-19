@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@700&display=swap">
 <style>
-/* Layout: a headline, then one big line that reads "a _______ game". Only the blank rolls, and only when space is pressed. Pure black and white. */
+/* Layout: a headline, then one big line that reads "a _______ app". Only the blank rolls, and only when space is pressed. Pure black and white. */
 :root {
   color-scheme: dark;
   --bg: #000000; --ink: #ffffff; --muted: #8a8a8a; --mark: #ffffff; --mark-ink: #000000;
@@ -35,15 +35,15 @@ h1 { margin: 0; font-weight: 700; font-size: clamp(30px, min(6vw, 9vh), 92px); l
 </style>
 
 <div id="stage">
-  <h1>What do I build today?</h1>
-  <div id="line" aria-live="polite"><span>a</span><div id="win"><div id="mark"></div><div id="blank">_______</div><div id="reel"></div></div><span>game</span></div>
+  <h1>What app should I make today?</h1>
+  <div id="line" aria-live="polite"><span>a</span><div id="win"><div id="mark"></div><div id="blank">_______</div><div id="reel"></div></div><span>app</span></div>
   <div id="hint">PRESS SPACE TO ROLL</div>
 </div>
 
 <script>
 (function () {
-  var ITEMS = ["puzzle", "racing", "snake", "memory", "shooter", "quiz", "maze", "card", "rhythm", "runner", "clicker", "platform", "physics"];
-  var TARGET = ITEMS.indexOf("puzzle");       // every roll lands on "puzzle"
+  var ITEMS = ["notes", "weather", "habit", "chat", "music", "quiz", "timer", "photo", "fitness", "wii"];
+  var TARGET = ITEMS.indexOf("wii");          // every roll lands on "wii"
   var LOOPS = 9, DUR = 3.8;                    // reel length, and how long a roll takes (seconds)
   var REST = "PRESS SPACE TO ROLL", DONE = "SPACE ROLLS AGAIN. R RESETS. M MUTES";
   var $ = function (id) { return document.getElementById(id); };

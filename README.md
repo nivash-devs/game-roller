@@ -1,7 +1,7 @@
 # Game Roller
 
-A black and white page that reads "a _______ game". Press space and the blank rolls through game types and lands on puzzle.
+A black and white page that asks "What app should I make today?" and reads "a _______ app". Press space and the blank rolls through app types and lands on wii.
 
 Space rolls, R resets, M mutes.
 
-Made for a build-in-public reel: roll, land, then build the game with AI.
+Made for a build-in-public reel: roll, land, then build the app.
