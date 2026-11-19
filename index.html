@@ -44,21 +44,22 @@ h1 { margin: 0; font-weight: 700; font-size: clamp(30px, min(6vw, 9vh), 92px); l
 <script>
 (function () {
   var BASE = [
-    "notes", "weather", "habit", "chat", "music", "quiz", "timer", "photo", "fitness", "maps",
-    "mail", "todo", "camera", "video", "radio", "podcast", "banking", "travel", "recipes", "shopping",
-    "calendar", "diary", "budget", "taxi", "flights", "hotels", "movies", "news", "sports", "stocks",
-    "crypto", "wallet", "dating", "social", "chess", "trivia", "karaoke", "scanner", "browser", "clock",
-    "alarm", "compass", "tutor", "coding", "reader", "books", "comics", "drawing", "editor", "collage",
-    "filters", "stickers", "memes", "fasting", "sleep", "yoga", "running", "cycling", "hiking", "golf",
-    "tennis", "fishing", "garden", "pets", "plants", "cooking", "grocery", "coupons", "parking", "transit",
-    "delivery", "rentals", "jobs", "resume", "invoice", "expenses", "tickets", "events", "polls", "forms",
-    "survey", "voting", "charity", "prayer", "quotes", "jokes", "walkie", "wii"
+    "WhatsApp", "Discord", "Godot", "Instagram", "TikTok", "Spotify", "YouTube", "Netflix", "Snapchat",
+    "Telegram", "Signal", "Slack", "Zoom", "Notion", "Figma", "Canva", "Uber", "Gmail",
+    "Chrome", "Safari", "Firefox", "Steam", "Twitch", "Reddit", "Pinterest", "Twitter", "LinkedIn",
+    "PayPal", "Airbnb", "Duolingo", "Shazam", "Dropbox", "Evernote", "Trello", "GitHub", "Vercel",
+    "Blender", "OBS", "Unity", "Excel", "Word", "Roblox", "Minecraft", "Threads", "Bluesky",
+    "Mastodon", "Facebook", "WeChat", "Line", "Viber", "Skype", "Teams", "Outlook", "Obsidian",
+    "Anki", "Quizlet", "Kahoot", "Scratch", "Replit", "Cursor", "CapCut", "InShot", "Edits",
+    "Premiere", "Calendly", "Zapier", "Miro", "Linear", "Keynote", "VLC", "Plex", "Audible",
+    "Kindle", "Strava", "Fitbit", "Waze", "Lyft", "Zillow", "Etsy", "eBay", "Amazon",
+    "Shopify", "Stripe", "Docker", "Unreal", "Lichess", "Wordle", "Wii"
   ];
-  // Shuffle the order each time the page loads, but keep "wii" away from the very start and end of the list.
+  // Shuffle the order each time the page loads, but keep "Wii" away from the very start and end of the list.
   var ITEMS = BASE.slice();
   for (var i = ITEMS.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), tmp = ITEMS[i]; ITEMS[i] = ITEMS[j]; ITEMS[j] = tmp; }
-  (function () { var w = ITEMS.indexOf("wii"), mid = Math.floor(ITEMS.length / 2); if (w < 3 || w > ITEMS.length - 4) { ITEMS[w] = ITEMS[mid]; ITEMS[mid] = "wii"; } })();
-  var TARGET = ITEMS.indexOf("wii");          // every roll lands on "wii"
+  (function () { var w = ITEMS.indexOf("Wii"), mid = Math.floor(ITEMS.length / 2); if (w < 3 || w > ITEMS.length - 4) { ITEMS[w] = ITEMS[mid]; ITEMS[mid] = "Wii"; } })();
+  var TARGET = ITEMS.indexOf("Wii");          // every roll lands on "Wii"
   var LOOPS = 4, DUR = 3.8;                    // reel length, and how long a roll takes (seconds)
   var REST = "PRESS SPACE TO ROLL", DONE = "SPACE ROLLS AGAIN. R RESETS. M MUTES";
   var $ = function (id) { return document.getElementById(id); };
